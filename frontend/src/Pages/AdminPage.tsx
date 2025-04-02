@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Book } from '../types/book';
 import { deleteBook, fetchBooks } from '../api/BookAPI';
 import Pagination from '../Components/Pagination';
-import { useNavigate } from 'react-router-dom';
 
 import NewBookForm from '../Components/NewBookForm';
 import EditBookForm from '../Components/EditBookForm';
@@ -12,7 +11,6 @@ const AdminBooksPage = () => {
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageNum, setPageNum] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [showForm, setShowForm] = useState<boolean>(false);
@@ -36,7 +34,7 @@ const AdminBooksPage = () => {
 
   const handleDeleteBook = async (bookId: number) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this book? This action cannot be undone."
+      'Are you sure you want to delete this book? This action cannot be undone.'
     );
     if (!confirmDelete) return;
 
@@ -44,7 +42,7 @@ const AdminBooksPage = () => {
       await deleteBook(bookId);
       setBooks((books) => books.filter((b) => b.bookId !== bookId));
     } catch (error) {
-      alert("Error deleting book: " + error);
+      alert('Error deleting book: ' + error);
     }
   };
 

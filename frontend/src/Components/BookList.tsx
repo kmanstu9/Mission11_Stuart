@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import { fetchBooks } from '../api/BookAPI';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useCart } from '../context/CartContext'; // <-- if you're using CartContext
@@ -18,36 +18,31 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
   const [sortAsc, setSortAsc] = useState<boolean>(true);
   const { addToCart } = useCart();
 
-
   const sortedBooks = [...books].sort((a, b) => {
     return sortAsc
       ? a.title.localeCompare(b.title)
       : b.title.localeCompare(a.title);
   });
-  
+
   useEffect(() => {
     const loadBooks = async () => {
       try {
         setLoading(true); // set loading to true when starting to fetch data
-        const data = await fetchBooks(pageSize, pageNum, selectedCategories);  
+        const data = await fetchBooks(pageSize, pageNum, selectedCategories);
         setBooks(data.books); // thsi needs to match whats on the json file
         setTotalPages(Math.ceil(data.totalNumBooks / pageSize));
-      }
-      catch (error) {
+      } catch (error) {
         setError((error as Error).message);
-      } 
-      finally {
+      } finally {
         setLoading(false);
       }
     };
 
-
     loadBooks();
-
   }, [pageSize, pageNum, selectedCategories]); // this is the dependancy array, if you want it to watch for soemthing specific, put it in here
 
-  if (loading) return <p>Loading books...</p>
-  if (error) return <p className='text-red-500'>Error: {error}</p>;
+  if (loading) return <p>Loading books...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
 
   return (
     <>
@@ -92,8 +87,8 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
                 addToCart({
                   ...b,
                   bookId: 0,
-                  quantity: 0
-                }); // 
+                  quantity: 0,
+                }); //
 
                 navigate('/cart');
               }}
@@ -104,17 +99,17 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
         </div>
       ))}
 
-<br />
-          <Pagination
-          currentPage= {pageNum}
-          totalPages = {totalPages}
-          pageSize = {pageSize}
-          onPageChange={setPageNum}
-          onPageSizeChange={(newSize) => {
-            setPageSize(newSize);
-            setPageNum(1);
-          }}
-            />
+      <br />
+      <Pagination
+        currentPage={pageNum}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        onPageChange={setPageNum}
+        onPageSizeChange={(newSize) => {
+          setPageSize(newSize);
+          setPageNum(1);
+        }}
+      />
     </>
   );
 }

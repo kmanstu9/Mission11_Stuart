@@ -12,7 +12,9 @@ function Filter({
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('https://localhost:5000/api/Bookstore/GetCategories');
+        const response = await fetch(
+          'https://localhost:5000/api/Bookstore/GetCategories'
+        );
         const data = await response.json();
         setCategories(data);
       } catch (error) {
@@ -61,7 +63,9 @@ function Filter({
                 checked={selectedCategories.includes(c)}
                 onChange={handleCheckBoxChange}
               />
-              <label htmlFor={c} className="ms-2">{c}</label>
+              <label htmlFor={c} className="ms-2">
+                {c}
+              </label>
             </div>
           </div>
         </div>

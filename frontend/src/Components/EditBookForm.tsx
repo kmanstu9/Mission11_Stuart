@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { updateBook } from "../api/BookAPI";
-import { Book } from "../types/book";
+import { useState } from 'react';
+import { updateBook } from '../api/BookAPI';
+import { Book } from '../types/book';
 
 interface EditBookFormProps {
   book: Book;
@@ -24,32 +24,82 @@ const EditBookForm = ({ book, onSuccess, onCancel }: EditBookFormProps) => {
   return (
     <form onSubmit={handleSubmit}>
       <h2>Add New Book</h2>
-      <label>Book Title:
-        <input type="text" name="title" value={formData.title} onChange={handleChange} />
+      <label>
+        Book Title:
+        <input
+          type="text"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+        />
       </label>
-      <label>Author:
-        <input type="text" name="author" value={formData.author} onChange={handleChange} />
+      <label>
+        Author:
+        <input
+          type="text"
+          name="author"
+          value={formData.author}
+          onChange={handleChange}
+        />
       </label>
-      <label>Publisher:
-        <input type="text" name="publisher" value={formData.publisher} onChange={handleChange} />
+      <label>
+        Publisher:
+        <input
+          type="text"
+          name="publisher"
+          value={formData.publisher}
+          onChange={handleChange}
+        />
       </label>
-      <label>ISBN:
-        <input type="text" name="isbn" value={formData.isbn} onChange={handleChange} />
+      <label>
+        ISBN:
+        <input
+          type="text"
+          name="isbn"
+          value={formData.isbn}
+          onChange={handleChange}
+        />
       </label>
-      <label>Category:
-        <input type="text" name="category" value={formData.category} onChange={handleChange} />
+      <label>
+        Category:
+        <input
+          type="text"
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+        />
       </label>
-      <label>Classification:
-        <input type="text" name="classification" value={formData.classification} onChange={handleChange} />
+      <label>
+        Classification:
+        <input
+          type="text"
+          name="classification"
+          value={formData.classification}
+          onChange={handleChange}
+        />
       </label>
-      <label>Number of Pages:
-        <input type="number" name="pageCount" value={formData.pageCount} onChange={handleChange} />
+      <label>
+        Number of Pages:
+        <input
+          type="number"
+          name="pageCount"
+          value={formData.pageCount}
+          onChange={handleChange}
+        />
       </label>
-      <label>Price:
-        <input type="text" name="price" value={formData.price} onChange={handleChange} />
+      <label>
+        Price:
+        <input
+          type="text"
+          name="price"
+          value={formData.price}
+          onChange={handleChange}
+        />
       </label>
       <button type="submit">Submit</button>
-      <button type="button" onClick={onCancel}>Cancel</button>
+      <button type="button" onClick={onCancel}>
+        Cancel
+      </button>
     </form>
   );
 };

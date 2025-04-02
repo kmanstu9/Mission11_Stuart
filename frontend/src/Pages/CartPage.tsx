@@ -5,7 +5,10 @@ import { CartItem } from '../types/CartItem';
 function CartPage() {
   const navigate = useNavigate();
   const { cart, removeFromCart } = useCart();
-  const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const cartTotal = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   // Optional: Define a "max items" limit to show in the progress bar
   const maxItems = 10;
@@ -36,13 +39,21 @@ function CartPage() {
         ) : (
           <ul className="list-group mb-3">
             {cart.map((item: CartItem) => (
-              <li className="list-group-item d-flex justify-content-between align-items-center" key={item.bookId}>
+              <li
+                className="list-group-item d-flex justify-content-between align-items-center"
+                key={item.bookId}
+              >
                 <div>
                   <strong>{item.title}</strong> (x{item.quantity})<br />
-                  <small>${item.price.toFixed(2)} each</small><br />
-                  <strong>Subtotal:</strong> ${(item.price * item.quantity).toFixed(2)}
+                  <small>${item.price.toFixed(2)} each</small>
+                  <br />
+                  <strong>Subtotal:</strong> $
+                  {(item.price * item.quantity).toFixed(2)}
                 </div>
-                <button className="btn btn-danger btn-sm" onClick={() => removeFromCart(item.bookId)}>
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => removeFromCart(item.bookId)}
+                >
                   Remove
                 </button>
               </li>
@@ -53,7 +64,10 @@ function CartPage() {
 
       <h3>Total: ${cartTotal.toFixed(2)}</h3>
       <button className="btn btn-success me-2">Checkout</button>
-      <button className="btn btn-secondary" onClick={() => navigate('/bookList')}>
+      <button
+        className="btn btn-secondary"
+        onClick={() => navigate('/bookList')}
+      >
         Continue Browsing
       </button>
     </div>
