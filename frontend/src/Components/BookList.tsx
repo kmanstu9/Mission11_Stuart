@@ -1,49 +1,53 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'
+import { fetchBooks } from '../api/BookAPI';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useCart } from '../context/CartContext'; // <-- if you're using CartContext
+
+import Pagination from './Pagination';
 import { Book } from '../types/book';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
 
 function BookList({ selectedCategories }: { selectedCategories: string[] }) {
   const [books, setBooks] = useState<Book[]>([]);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(10); // use this to set the number of books to display per page. alone is incomplete, need to go to bottom of page
   const [pageNum, setPageNum] = useState<number>(1);
-  const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [sortAsc, setSortAsc] = useState<boolean>(true);
   const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null); // this is for error handling
+  const [loading, setLoading] = useState<boolean>(true); // this is for loading state
+  const [sortAsc, setSortAsc] = useState<boolean>(true);
   const { addToCart } = useCart();
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const params = new URLSearchParams();
-        params.append('pageSize', pageSize.toString());
-        params.append('pageNum', pageNum.toString());
-        selectedCategories.forEach((c) => params.append('categories', c));
 
-        const response = await fetch(
-          `https://localhost:5000/api/Bookstore?${params.toString()}`,
-          { credentials: 'include' }
-        );
-        const data = await response.json();
-        console.log('Fetched data:', data);
-        setBooks(data.books);
-        setTotalItems(data.totalNumBooks);
+  const sortedBooks = [...books].sort((a, b) => {
+    return sortAsc
+      ? a.title.localeCompare(b.title)
+      : b.title.localeCompare(a.title);
+  });
+  
+  useEffect(() => {
+    const loadBooks = async () => {
+      try {
+        setLoading(true); // set loading to true when starting to fetch data
+        const data = await fetchBooks(pageSize, pageNum, selectedCategories);  
+        setBooks(data.books); // thsi needs to match whats on the json file
         setTotalPages(Math.ceil(data.totalNumBooks / pageSize));
-      } catch (error) {
-        console.error('Error fetching books:', error);
+      }
+      catch (error) {
+        setError((error as Error).message);
+      } 
+      finally {
+        setLoading(false);
       }
     };
 
-    fetchBooks();
-  }, [pageSize, pageNum, selectedCategories]);
 
-  const sortedBooks = [...books].sort((a, b) => {
-    if (a.title < b.title) return sortAsc ? -1 : 1;
-    if (a.title > b.title) return sortAsc ? 1 : -1;
-    return 0;
-  });
+    loadBooks();
+
+  }, [pageSize, pageNum, selectedCategories]); // this is the dependancy array, if you want it to watch for soemthing specific, put it in here
+
+  if (loading) return <p>Loading books...</p>
+  if (error) return <p className='text-red-500'>Error: {error}</p>;
 
   return (
     <>
@@ -76,7 +80,7 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
                 <strong>Category:</strong> {b.category}
               </li>
               <li>
-                <strong>Page Count:</strong> {b.pagecount}
+                <strong>Page Count:</strong> {b.pageCount}
               </li>
               <li>
                 <strong>Price:</strong> ${b.price.toFixed(2)}
@@ -85,7 +89,11 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
             <button
               className="btn btn-success"
               onClick={() => {
-                addToCart({ ...b }); // 👈 no quantity here
+                addToCart({
+                  ...b,
+                  bookId: 0,
+                  quantity: 0
+                }); // 
 
                 navigate('/cart');
               }}
@@ -96,47 +104,17 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
         </div>
       ))}
 
-      <div className="my-3">
-        <button
-          className="btn btn-secondary me-2"
-          disabled={pageNum === 1}
-          onClick={() => setPageNum(pageNum - 1)}
-        >
-          Previous
-        </button>
-        {[...Array(totalPages)].map((_, i) => (
-          <button
-            className={`btn ${pageNum === i + 1 ? 'btn-primary' : 'btn-outline-primary'} me-1`}
-            key={i + 1}
-            onClick={() => setPageNum(i + 1)}
-          >
-            {i + 1}
-          </button>
-        ))}
-        <button
-          className="btn btn-secondary ms-2"
-          disabled={pageNum === totalPages}
-          onClick={() => setPageNum(pageNum + 1)}
-        >
-          Next
-        </button>
-      </div>
-
-      <label>
-        Results per page:&nbsp;
-        <select
-          className="form-select w-auto d-inline-block"
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
+<br />
+          <Pagination
+          currentPage= {pageNum}
+          totalPages = {totalPages}
+          pageSize = {pageSize}
+          onPageChange={setPageNum}
+          onPageSizeChange={(newSize) => {
+            setPageSize(newSize);
             setPageNum(1);
           }}
-        >
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="20">20</option>
-        </select>
-      </label>
+            />
     </>
   );
 }

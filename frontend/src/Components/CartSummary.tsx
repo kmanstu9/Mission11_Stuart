@@ -18,17 +18,40 @@ const CartSummary = () => {
         background: '#f8f9fa',
         padding: '8px 16px',
         borderRadius: '999px',
-        cursor: 'pointer',
         display: 'flex',
         alignItems: 'center',
-        gap: '8px',
+        gap: '12px',
         boxShadow: '0 2px 5px rgba(103, 2, 2, 0.2)',
         fontSize: '16px',
         zIndex: 1000,
       }}
-      onClick={() => navigate('/cart')}
     >
-      🛒 <strong>${totalAmount.toFixed(2)}</strong>
+      <div
+        style={{
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+        }}
+        onClick={() => navigate('/cart')}
+      >
+        🛒 <strong>${totalAmount.toFixed(2)}</strong>
+      </div>
+
+      <button
+        onClick={() => navigate('/admin')}
+        style={{
+          background: '#dc3545',
+          color: 'white',
+          border: 'none',
+          borderRadius: '999px',
+          padding: '6px 12px',
+          cursor: 'pointer',
+          fontWeight: 'bold',
+        }}
+      >
+        Admin
+      </button>
     </div>
   );
 };
