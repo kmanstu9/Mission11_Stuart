@@ -13,7 +13,7 @@ function Filter({
     const fetchCategories = async () => {
       try {
         const response = await fetch(
-          'https://localhost:5000/api/Bookstore/GetCategories'
+          'https://bookstore-stuart-backend.azurewebsites.net//api/Bookstore/GetCategories'
         );
         const data = await response.json();
         setCategories(data);
